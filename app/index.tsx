@@ -1,16 +1,11 @@
-import TextField from "@/components/TextField";
+import {LoginForm} from "@/components/LoginForm";
 import { Text, View } from "react-native";
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <View className="flex-1 justify-center items-center"
     >
-      <TextField></TextField>
+      <LoginForm onLoginPress={() => console.log("Login pressed")}></LoginForm>
     </View>
   );
 }
