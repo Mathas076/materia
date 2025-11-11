@@ -1,21 +1,18 @@
 import { CustomButton } from '@/components/ui/CustomButton';
 import CustomText from "@/components/ui/CustomText"
-import { TextInput, View } from "react-native";
+import { TextInput, View, TouchableOpacity } from "react-native";
 import { useState } from 'react';
-import { z } from 'zod';
 import { loginSchema } from '@/lib/schemas/TextSchema';
 
-export function LoginForm({ onLoginPress, isDisabled = true }: LoginFormProps) {
+export function LoginForm({ onLoginPress, onRegisterPress, isDisabled = true }: LoginFormProps) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); // opcional si quieres validar contraseña después
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const handleLoginPress = () => {
-    // Validar con Zod 
+    const result = loginSchema.safeParse({ email, password });
 
-    const result = loginSchema.safeParse({ email });
     if (!result.success) {
-      // Mostrar error
       setError(result.error.errors[0].message);
     } else {
       setError(null);
@@ -25,9 +22,10 @@ export function LoginForm({ onLoginPress, isDisabled = true }: LoginFormProps) {
 
   return (
     <>
-      <CustomText variant='large'>Inicia sesion!</CustomText>
+      <CustomText variant='large'>Inicia sesión!</CustomText>
       <CustomText variant='medium'>Ingresa tus datos para acceder a nuestra app!</CustomText>
           
+      {/* Email */}
       <TextInput
         className='bg-white text-black rounded-lg p-3 w-full border border-black'
         placeholder='Email'
@@ -35,24 +33,41 @@ export function LoginForm({ onLoginPress, isDisabled = true }: LoginFormProps) {
         onChangeText={setEmail}
         keyboardType='email-address'
         autoCapitalize='none'
-      />{/*
+      />
+
+      {/* Contraseña */}
       <TextInput
-        className='bg-white text-black rounded-lg p-3 w-full border border-black'
+        className='bg-white text-black rounded-lg p-3 w-full border border-black mt-3'
         placeholder='Contraseña'
         secureTextEntry
         value={password}
         onChangeText={setPassword}
-      />*/}
+      />
 
-      {error && <CustomText variant='small'>{error}</CustomText>}
+      {error && (
+        <CustomText variant='small' >
+          {error}
+        </CustomText>
+      )}
 
-      <View className='flex-row gap-2'>
+      <View className='flex-row gap-2 mt-4'>
         <CustomButton 
-        variant='primary'
-        onPress={handleLoginPress}
+          variant='primary'
+          onPress={handleLoginPress}
         >
           Iniciar sesión
         </CustomButton>
+      </View>
+
+      {/* Texto de registro */}
+      <View className='flex-row items-center mt-4'>
+        <CustomText variant='small'>No tienes una cuenta? </CustomText>
+
+        <TouchableOpacity onPress={onRegisterPress}>
+          <CustomText variant='small'>
+            Regístrate
+          </CustomText>
+        </TouchableOpacity>
       </View>
     </>
   );
